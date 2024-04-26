@@ -4,22 +4,11 @@
 # hack to be able to run long lived processes from udev (which is required for 
 # some filesystems that will spawn some daemon, like ntfs-3g).
 # 
-# udev will kill the running process and all childs after 4-5 seconds, so the
+# udev will kill the running process and all children after 4-5 seconds, so the
 # mounting has to be done as a separate "service"
 
 # mount the device when added
-# Physical SATA, SCSI, and USB
-KERNEL=="sd[a-z]*", ACTION=="add",  	RUN+="/usr/bin/systemctl --no-block restart media-automount@%k.service"
-# Virtual SATA, SCSI, and USB
-KERNEL=="vd[a-z]*", ACTION=="add",  	RUN+="/usr/bin/systemctl --no-block restart media-automount@%k.service"
-# eMMC and SD cards
-KERNEL=="mmcblk[0-9]p[0-9]", ACTION=="add",  	RUN+="/usr/bin/systemctl --no-block restart media-automount@%k.service"
-# NVMe
-KERNEL=="nvme[0-9]n[0-9]p[0-9]", ACTION=="add",  	RUN+="/usr/bin/systemctl --no-block restart media-automount@%k.service"
+KERNEL=="sd[a-z]*", ACTION=="add", RUN+="/usr/bin/systemctl --no-block restart media-automount@%k.service"
 
 # clean up after device removal
-KERNEL=="sd[a-z]*", ACTION=="remove",	RUN+="/usr/bin/systemctl --no-block restart media-automount@%k.service"
-KERNEL=="vd[a-z]*", ACTION=="remove",	RUN+="/usr/bin/systemctl --no-block restart media-automount@%k.service"
-KERNEL=="mmcblk[0-9]p[0-9]", ACTION=="remove",	RUN+="/usr/bin/systemctl --no-block restart media-automount@%k.service"
-KERNEL=="nvme[0-9]n[0-9]p[0-9]", ACTION=="remove",	RUN+="/usr/bin/systemctl --no-block restart media-automount@%k.service"
-
+KERNEL=="sd[a-z]*", ACTION=="remove", RUN+="/usr/bin/systemctl --no-block restart media-automount@%k.service"
