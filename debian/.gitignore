@@ -1,0 +1,5 @@
+.debhelper
+debhelper-build-stamp
+files
+pi-usb-automount
+pi-usb-automount.substvars

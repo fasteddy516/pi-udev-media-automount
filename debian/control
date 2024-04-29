@@ -1,0 +1,14 @@
+Source: pi-usb-automount
+Section: utils
+Priority: optional
+Maintainer: Edward Wright <fasteddy@thewrightspace.net>
+Homepage: https://github.com/fasteddy516/pi-usb-automount
+Standards-Version: 4.5.0
+Build-Depends: debhelper (>= 10)
+
+Package: pi-usb-automount
+Architecture: all
+Depends: ${misc:Depends}
+Description: USB drive automounting for Raspberry Pi.
+  Enables USB drive automounting for a headless/console-only Raspberry Pi.
+
