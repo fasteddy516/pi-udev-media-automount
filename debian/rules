@@ -3,8 +3,3 @@
 	dh $@ --with=autoreconf
 override_dh_auto_install:
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/pi-usb-automount
-
-
-
-
-

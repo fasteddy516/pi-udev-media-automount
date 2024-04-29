@@ -5,4 +5,3 @@ install:
 	install -Dm644 pi-usb-automount@.service $(DESTDIR)$(PREFIX)/lib/systemd/system/pi-usb-automount@.service
 	install -d $(DESTDIR)/etc/pi-usb-automount.d
 	install -Cm644 pi-usb-automount.d/* $(DESTDIR)/etc/pi-usb-automount.d/
-
