@@ -11,3 +11,5 @@ Architecture: all
 Depends: ${misc:Depends}
 Description: USB drive automounting for Raspberry Pi.
   Enables USB drive automounting for a headless/console-only Raspberry Pi.
+  .
+  Licensed under the BSD-2-Clause license.  See /usr/share/doc/pi-usb-automount/LICENSE.
