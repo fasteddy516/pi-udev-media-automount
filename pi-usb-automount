@@ -7,7 +7,7 @@ AUTOMOUNT_OPTS='users'
 AUTOMOUNT_TYPE='auto'
 
 # Directory to look for type-specific settings
-confdir=/etc/media-automount.d
+confdir=/etc/pi-usb-automount.d
 
 # Directory to use as parent media dir for mountpoints
 mediadir=/media
@@ -18,7 +18,7 @@ mediadir=/media
 }
 
 log() {
-    echo "$*" | systemd-cat -p ${loglevel:-info} -t "media-automount"
+    echo "$*" | systemd-cat -p ${loglevel:-info} -t "pi-usb-automount"
 }
 
 alias debuglog="loglevel=debug log"
