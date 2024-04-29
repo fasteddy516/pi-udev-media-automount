@@ -19,6 +19,10 @@ jobs:
       - name: Build DEB Package
         run: sudo dpkg-buildpackage -us -uc
 
+      - name: Rename DEB Package
+        run: |
+          mv ../*.deb ../pi-usb-automount.deb
+
       - name: Upload DEB package to draft release
         uses: softprops/action-gh-release@v1
         with:
