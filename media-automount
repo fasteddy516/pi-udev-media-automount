@@ -92,16 +92,31 @@ then
 fi
 
 # directory name
-AUTOMOUNT_DIR="${mediadir}/usb"
+prefix="${mediadir}/usb"
+index=0
 
-# Avoid conflicts when multiple devices have the same label
-if [ -e "$AUTOMOUNT_DIR" ] && mountpoint -q "$AUTOMOUNT_DIR"
-then
-    dups=$(find "${AUTOMOUNT_DIR}*" -maxdepth 0 -printf '.' | wc -c)
-    AUTOMOUNT_DIR="${AUTOMOUNT_DIR}$((dups+1))"
-else
-    AUTOMOUNT_DIR="${AUTOMOUNT_DIR}0"
-fi
+# Loop until an unused directory name is found
+while true; do
+    # Check if the index exceeds the maximum allowed value
+    if [ $index -gt 99 ]; then
+        echo "Error: All directory names from ${prefix}0 to ${prefix}99 are in use."
+        exit 1
+    fi
+
+    # Form the new directory name
+    dir_name="${prefix}${index}"
+
+    # Check if the directory exists
+    if [ ! -d "${dir_name}" ]; then
+        # If the directory does not exist, we have our name
+        break
+    fi
+
+    # Increment the index for the next iteration
+    index=$((index + 1))
+done
+
+AUTOMOUNT_DIR="${dir_name}"
 
 # Load Filesystem-specific configuration for mounting
 if [ -e "$confdir/$TYPE" ]
