@@ -1,0 +1,29 @@
+name: Build and Release DEB Package
+
+on:
+  workflow_dispatch:  # Trigger the workflow manually from GitHub UI
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up dependencies
+        run: |
+          sudo apt update 
+          sudo apt install -y dpkg-dev debhelper
+
+      - name: Build DEB Package
+        run: sudo dpkg-buildpackage -us -uc
+
+      - name: Upload DEB package to draft release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          files: |
+            ../*.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
