@@ -7,6 +7,29 @@ case "$1" in
         # Reload udev rules and trigger them
         udevadm control --reload-rules
         udevadm trigger
+
+        # Directory where USB mount points are expected
+        base_dir="/media"
+
+        # Iterate over possible USB mount points from usb0 to usb99
+        i=0
+        while [ $i -le 99 ]; do
+            dir="$base_dir/usb$i"
+            i=$((i + 1))
+            # Check if the directory exists
+            if [ -d "$dir" ]; then
+                # Check if the directory is a mount point
+                if mountpoint -q "$dir"; then
+                    # Attempt to unmount the directory
+                    umount "$dir"
+                    if [ $? -ne 0 ]; then
+                        continue
+                    fi
+                fi
+                # Remove the directory if it's no longer a mount point
+                rmdir "$dir"
+            fi
+        done
         ;;
     upgrade|failed-upgrade|abort-install|abort-upgrade)
         # Handle other cases if necessary
