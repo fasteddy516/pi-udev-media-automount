@@ -1,49 +1,43 @@
-udev-media-automount
-====================
+# pi-usb-automount
 
-Auto mount removable media devices by means of udev rules.
+###### Auto mount USB flash drives on a headless/console-only Raspberry Pi.
 
-This is intended for simple systems that don't want or can't run the udisks2 daemon (which is designed for GNOME/KDE desktop environments and at the time of this writting is frustrating to set up from a bare commandline).
+Forked from [Fernando Carmona Varo's](https://github.com/Ferk) [udev-media-automount](https://github.com/Ferk/udev-media-automount) and modified by [Edward Wright](https://github.com/fasteddy516).
 
-This combines the previous udev rules I was using in my xdg_config repository with some structure and ideas taken from tylorchu's usb-automount.
+Available at https://github.com/fasteddy516/pi-usb-automount
 
-Every device that is inserted and isn't already configured in `/etc/fstab` will be mounted by media-automount. This includes not only usb devices but also card readers and other media with a `/dev/sd*` device.
 
-If there are devices you don't want to automount neither at boot nor with media-automount, you can add them in /etc/fstab with the option 'noauto'.
+## Description
+This is a modified version of [udev-media-automount](https://github.com/Ferk/udev-media-automount) created specifically for use with Raspberry Pis and USB flash drives when a full desktop environment is not installed.  (i.e. Raspberry Pi OS Lite, headless installations, kiosk and other purpose-built applications, etc.)
 
-The mount options might differ to the filesystem type for the device plugged in. E.g. vFAT and NTFS devices will be mounted with the "flush" option to try to prevent damage on accidental removals of the device with unclean umounts. Also whenever ntfs-3g is available, it will be used to mount ntfs devices.
+Once _pi-usb-automount_ is installed, a USB drive will be automatically mounted and accessible in `/media/usb0` when it is connected, and will be automatically unmounted when it is removed.  If multiple USB drives are connected, they will appear as `usb1`, `usb2`, etc.
 
-The mount directory will appear in /media/ under a name with pattern: `<LABEL OF THE FS>.<FS TYPE>`
-(if duplicate, `_<NUMBER>` will be appended).
 
-Due to changes in udev (long running processes are killed), it's necessary to use systemd for spawning a mounting service.
+## Compatibility
+_pi-usb-automount_ has been tested exclusively with Raspberry Pi models 4B and 5 running Raspberry Pi OS Lite based on Debian 12 (bookworm) along with a variety of USB flash drives all formatted as a single FAT16 or FAT32 partition.  It may work on other platforms, and certainly *should* work with other device types and filesystems also supported by _udev-media-automount_, but no testing has been done for those use cases.  Also note that running _udev-media-automount_ and _pi-usb-automount_ at the same time is not supported.
 
-To check the logs produced by the script, run `journalctl -t media-automount`, add `-b` for current boot.
+If you are successfully using _pi-usb-automount_ under conditions that I haven't mentioned above, please let me know and I can update the information accordingly.
 
-Installation
-------------
 
-For Archlinux, the [`udev-media-automount` AUR package](https://aur.archlinux.org/packages/udev-media-automount) is offered.
-
-For other systems, you may download the content of the repository from
-https://github.com/Ferk/udev-media-automount/archive/refs/heads/master.zip
-
-You can then install it using the following instructions
-
+## Installation
+Use the following commands to install _pi-usb-automount_ on your Raspberry Pi:
 ```
-unzip master.zip
-cd udev-media-automount-master
-sudo make install
-sudo udevadm control --reload-rules
-sudo udevadm trigger
+wget https://github.com/fasteddy516/pi-usb-automount/releases/download/latest/pi-usb-automount.deb
+sudo dpkg -i pi-usb-automount.deb
 ```
+After the installation completes you can safely remove the `.deb` file with the command `rm pi-usb-automount.deb`.
 
-Configuration
--------------
+To uninstall _pi-usb-automount_ but leave its configuration files in `/etc/pi-usb-automount.d`, use `sudo dpkg -r pi-usb-automount`. To remove everything including configuration files, use `sudo dpkg --purge pi-usb-automount`.
 
-The folder `/etc/media-automount.d` can be used to set custom mount options for specific device types.
 
-If a file with filename matching a filesystem type (eg. `vfat`, `nfts`, `etc`) is found, it'll be loaded when a device using the given filesystem is to be mounted. This can be used to change the parameters provided to `mount`.
+## Troubleshooting
+To check the logs produced by _pi-usb-automount_, run `journalctl -t pi-usb-automount`. Add `-b` to limit the results to the current boot only.
+
+
+## Configuration
+No configuration is required for typical read/write access to USB flash drive contents.  However, the folder `/etc/pi-usb-automount.d` can be used to set custom mount options for specific file system types if desired.
+
+If a file with a name matching a filesystem type (eg. `vfat`, `nfts`, `etc`) is found, it will be loaded when a device using the given filesystem is to be mounted. This can be used to change the parameters provided to `mount`.
 
 An example below for `/etc/media-automount.d/ntfs`:
 
@@ -56,3 +50,20 @@ AUTOMOUNT_TYPE="ntfs-3g"
 ```
 
 Note that these files are sourced as shell scripts, so it's possible to include logic in them in case you want to conditionally apply some configuration.
+
+
+## Differences from _udev-media-automount_
+_pi-usb-automount_ differs from _udev-media-automount_ in that it:
+
+- Is intended for - and tested on - Raspberry Pis
+
+- Is easily installable (_and removeable!_) in Raspberry Pi OS via a `.deb` package
+
+- Only mounts devices identified as `sd[a-z]` (i.e. `sda`, `sdb`, etc.)  Devices identified as `vd`, `mmcblk` or `nvme` are all ignored.
+
+- Uses a different, more generic naming convention for mount points; `/media/usb0`, `/media/usb1`, etc.
+
+
+## Contributing
+If you have questions, problems, feature requests, etc. please post them to the 
+[Issues section on Github](https://github.com/fasteddy516/pi-usb-automount/issues).  If you would like to contribute, please let me know.
