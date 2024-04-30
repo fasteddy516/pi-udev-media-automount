@@ -22,7 +22,7 @@ If you are successfully using _pi-usb-automount_ under conditions that I haven't
 ## Installation
 Use the following commands to install _pi-usb-automount_ on your Raspberry Pi:
 ```
-wget https://github.com/fasteddy516/pi-usb-automount/releases/download/latest/pi-usb-automount.deb
+wget https://github.com/fasteddy516/pi-usb-automount/releases/latest/download/pi-usb-automount.deb
 sudo dpkg -i pi-usb-automount.deb
 ```
 After the installation completes you can safely remove the `.deb` file with the command `rm pi-usb-automount.deb`.
