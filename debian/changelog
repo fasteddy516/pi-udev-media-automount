@@ -1,3 +1,11 @@
+pi-usb-automount (1.0.1) UNRELEASED; urgency=medium
+
+  * Fixed race condition between cleanup and mounting.
+  * Made fstab UUID/LABEL checks more specific.
+  * Allow empty, unused mounting directories to be reused.
+
+ --  <fasteddy@thewrightspace.net>  Thu, 2 May 2024 08:37:23 -0400
+
 pi-usb-automount (1.0) UNRELEASED; urgency=medium
 
   * Initial release.
