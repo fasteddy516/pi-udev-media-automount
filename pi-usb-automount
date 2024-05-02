@@ -121,6 +121,10 @@ while true; do
     if [ ! -d "${dir_name}" ]; then
         # If the directory does not exist, we have our name
         break
+    elif [ "$(ls -A "${dir_name}" | wc -l)" -eq 0 ] && ! mountpoint -q "${dir_name}"; then
+        # If the directory is empty and is not a mountpoint, we can use it
+        debuglog "reusing existing empty directory ${dir_name} to mount ${dev}"
+        break
     fi
 
     # Increment the index for the next iteration
